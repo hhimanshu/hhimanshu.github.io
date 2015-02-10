@@ -1,2 +1,12 @@
 = First Post
-Hello there!
+:hp-tags: java
+
+[source, java]
+.HelloWorld.java
+----
+public class HelloWorld {
+  public static void main(String args[]) {
+    System.out.println("First Blog, all in Browser, hosted on GitHub. Thanks HubPress");
+  }
+}
+----
