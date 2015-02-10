@@ -10,4 +10,5 @@ public class HelloWorld {
   }
 }
 ----
-image::https://github.com/hhimanshu/hhimanshu.github.io/blob/master/images/for_the_win_logo.jpg[]
+
+image::/images/for_the_win_logo.jpg[for_the_win_logo]
