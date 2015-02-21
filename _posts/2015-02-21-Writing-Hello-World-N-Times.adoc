@@ -1,0 +1,40 @@
+= Writing "Hello World" N Times 
+:hp-tags: hackerrank, functional programming, Erlang  
+
+In order to learn functional programming and about Concurrency this year I picked http://www.erlang.org[Erlang]. 
+
+I also want to keep solving some problems so that the syntax becomes very familier to me and I found https://www.hackerrank.com/domains/fp/intro[Hackerrank] has functional programming domain which lets you solve problems.  
+
+I will be posting whatever I try and new things I learned. This may be useful to others who are new to Erlang or Functional Programming. 
+
+pass:[<u>Problem?</u>]
+----
+Print "Hello World" N times. The input portion will be handled automatically. You need to write a function with the recommended method signature.
+----
+
+This sounds extremely simple to me using list comprehensions and it is, but part I was not sure was how to read from standard input and write to standard output in Erlang.  
+
+After some google searches, I found exact same question on http://stackoverflow.com/a/10873293/379235[StackOverflow].
+
+I found out that I need to know about http://erldocs.com/current/stdlib/io.html?i=0&search=io:fr#fread/2[fread] and  http://erldocs.com/current/stdlib/io.html?i=0&search=io:fwr#fwrite/1[fwrite]. That was it. 
+
+
+pass:[<u>My Solution</u>]
+
+[source,erlang]
+-----
+-module(hr).
+-author("harith").
+
+-export([main/0]).
+
+main() ->
+  {ok, [N]} = io:fread(">", "~d"),
+  hello(N).
+
+hello(N) when N >= 0, N =< 50 ->
+  [io:format("Hello World~n") || _I <- lists:seq(1,N)].
+-----  
+
+
+Let me know if you have a better way of doing this.
