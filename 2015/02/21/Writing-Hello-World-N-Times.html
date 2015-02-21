@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Writing &quot;Hello World&quot; N Times</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://hhimanshu.github.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="http://hhimanshu.github.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html" />
+    
+    <meta property="og:site_name" content="Applied Code" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Writing &quot;Hello World&quot; N Times" />
+    <meta property="og:description" content="In order to learn functional programming and about Concurrency this year I picked Erlang. I also want to keep solving some problems so that the syntax becomes very familier to me and I found Hackerrank has functional programming domain which..." />
+    <meta property="og:url" content="http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html" />
+    <meta property="article:published_time" content="2015-02-21T08:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-02-21T14:55:39.574Z" />
+    <meta property="article:tag" content="hackerrank" />
+    <meta property="article:tag" content="functional programming" />
+    <meta property="article:tag" content="Erlang" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Writing &quot;Hello World&quot; N Times" />
+    <meta name="twitter:description" content="In order to learn functional programming and about Concurrency this year I picked Erlang. I also want to keep solving some problems so that the syntax becomes very familier to me and I found Hackerrank has functional programming domain which..." />
+    <meta name="twitter:url" content="http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Applied Code",
+    "author": {
+        "@type": "Person",
+        "name": "Harit Himanshu",
+        "image": "https://avatars.githubusercontent.com/u/6589036?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Writing &quot;Hello World&quot; N Times",
+    "url": "http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html",
+    "datePublished": "2015-02-21T08:00:00.000Z",
+    "dateModified": "2015-02-21T14:55:39.574Z",
+    "keywords": "hackerrank,  functional programming,  Erlang",
+    "description": "In order to learn functional programming and about Concurrency this year I picked Erlang. I also want to keep solving some problems so that the syntax becomes very familier to me and I found Hackerrank has functional programming domain which..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Applied Code" href="http://hhimanshu.github.io/rss" />
+</head>
+<body class="post-template tag-undefined tag-undefined tag-undefined">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="http://hhimanshu.github.io">Home</a>
+        <a class="subscribe-button icon-feed" href="http://hhimanshu.github.io/rss/">Subscribe</a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-undefined tag-undefined tag-undefined">
+
+        <header class="post-header">
+            <h1 class="post-title">Writing &quot;Hello World&quot; N Times</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-02-21">21 February 2015</time>  on <a href="http://hhimanshu.github.io/tag/hackerrank">hackerrank</a>, <a href="http://hhimanshu.github.io/tag/ functional programming"> functional programming</a>, <a href="http://hhimanshu.github.io/tag/ Erlang"> Erlang</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="paragraph">
+<p>In order to learn functional programming and about Concurrency this year I picked <a href="http://www.erlang.org">Erlang</a>.</p>
+</div>
+<div class="paragraph">
+<p>I also want to keep solving some problems so that the syntax becomes very familier to me and I found <a href="https://www.hackerrank.com/domains/fp/intro">Hackerrank</a> has functional programming domain which lets you solve problems.</p>
+</div>
+<div class="paragraph">
+<p>I will be posting whatever I try and new things I learned. This may be useful to others who are new to Erlang or Functional Programming.</p>
+</div>
+<div class="paragraph">
+<p><u>Problem?</u></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Print "Hello World" N times. The input portion will be handled automatically. You need to write a function with the recommended method signature.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This sounds extremely simple to me using list comprehensions and it is, but part I was not sure was how to read from standard input and write to standard output in Erlang.</p>
+</div>
+<div class="paragraph">
+<p>After some google searches, I found exact same question on <a href="http://stackoverflow.com/a/10873293/379235">StackOverflow</a>.</p>
+</div>
+<div class="paragraph">
+<p>I found out that I need to know about <a href="http://erldocs.com/current/stdlib/io.html?i=0&amp;search=io:fr#fread/2">fread</a> and  <a href="http://erldocs.com/current/stdlib/io.html?i=0&amp;search=io:fwr#fwrite/1">fwrite</a>. That was it.</p>
+</div>
+<div class="paragraph">
+<p><u>My Solution</u></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-erlang" data-lang="erlang">-module(hr).
+-author("harith").
+
+-export([main/0]).
+
+main() -&gt;
+  {ok, [N]} = io:fread("&gt;", "~d"),
+  hello(N).
+
+hello(N) when N &gt;= 0, N =&lt; 50 -&gt;
+  [io:format("Hello World~n") || _I &lt;- lists:seq(1,N)].</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let me know if you have a better way of doing this.</p>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6589036?v=3)"><span class="hidden">Harit Himanshu's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">Harit Himanshu</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Santa Clara, CA</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=Writing%20%22Hello%20World%22%20N%20Times&amp;url=http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://hhimanshu.github.io/2015/02/21/Writing-Hello-World-N-Times.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+    
+        <section class="post-comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+          var disqus_shortname = 'http://hhimanshucodeapplied.disqus.com'; // required: replace example with your forum shortname
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </section>
+    
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="http://hhimanshu.github.io">Applied Code</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script>
+
+    <script type="text/javascript" src="http://hhimanshu.github.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="http://hhimanshu.github.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
