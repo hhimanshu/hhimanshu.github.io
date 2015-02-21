@@ -29,7 +29,7 @@ pass:[<u>My Solution</u>]
 -export([main/0]).
 
 main() ->
-  {ok, [N]} = io:fread(">", "~d"),
+  {ok, [N]} = io:fread("", "~d"),
   hello(N).
 
 hello(N) when N >= 0, N =< 50 ->
