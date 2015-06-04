@@ -1,0 +1,77 @@
+= Running an Akka Actor forever
+
+I work on a project that runs as a single process and does many things. I was also reading about http://akka.io[Akka] for a while and wanted to use it.
+This seemed to be a very good use case where I could learn and add value to the existing project.  
+
+This is my first time working with http://akka.io[Akka] and http://www.scala-lang.org[Scala] so if you find my code not using recommended practices, please let me know, I would love to improve on it.
+
+For the purposes of this post, let's consider we have *Runner* (who we expect to run long and forever) and a *Coach* (who will look after *Runner*).
+
+The relationship could be visualized as 
+
+image::/images/actor_run_forever_0.png[initial hierarchy]
+
+
+The *Runner* is expected to run a *Race*, which looks like
+
+[source, scala]
+----
+import scala.concurrent.Future
+
+case object Start
+
+case object Stop
+
+case object StartWithFuture
+
+trait Race {
+  def start: Future[Any]
+}
+
+class Marathon extends Race {
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  override def start: Future[Any] = Future {
+    println("running long job in future")
+    for (i <- 1 to 3) {
+      Thread.sleep(200)
+    }
+    throw new RuntimeException("MarathonRunner is tired")
+  }
+}
+----
+
+Next, our *Runner* looks like  
+
+[source, scala]
+----
+import akka.actor.Status.Failure
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.event.LoggingReceive
+
+object Runner {
+  def props(race: Race) = Props(classOf[Runner], race)
+}
+
+class Runner(race: Race) extends Actor with ActorLogging {
+
+  override def receive: Receive = LoggingReceive {
+    case Start =>
+      sender ! "OK"
+      log.debug("running...")
+      Thread.sleep(10)
+      throw new RuntimeException("MarathonRunner is tired")
+
+    case Failure(throwable) => throw throwable
+
+    case Stop =>
+      log.debug("stopping runner")
+      context.stop(self)
+  }
+}
+----
+
+
+
+ 
