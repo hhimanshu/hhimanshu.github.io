@@ -74,9 +74,48 @@ class Runner(race: Race) extends Actor with ActorLogging {
   }
 }
 ----
-Our *Runner* is an 
+Our *Runner* is an http://doc.akka.io/docs/akka/snapshot/scala/actors.html[Actor] which is defined to do specific task when it receives a known message. For example, in our case *Runner* will only work if he receives one of messages in *Start*, *Failure* and *Stop*
 
 Once our *Runner* is ready, we need to see what our *Coach* does with this *Runner*
+
+[source, scala]
+----
+import akka.actor.SupervisorStrategy.Restart
+import akka.actor._
+import akka.event.LoggingReceive
+
+import scala.concurrent.duration._
+
+case object StartWork
+
+case object RestartRunner
+
+object Coach {
+  def props(): Props = Props[Coach]
+}
+
+class Coach() extends Actor with ActorLogging {
+
+  val runner = context.actorOf(Runner.props(new Marathon).withDispatcher("my-pinned-dispatcher"), "runner")
+
+  override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy(maxNrOfRetries = 2, withinTimeRange = 5 seconds) {
+    case _: RuntimeException =>
+      sender ! Start
+      Restart
+  }
+
+  override def receive = LoggingReceive {
+    case StartWork => runner ! Start
+
+    case RestartRunner =>
+      log.debug("runner restarted, sending message to Run")
+      self ! StartWork
+  }
+}
+----
+As we can see *Coach* is also an Actor which does specific tasks based on the messages it receives. In this case, Actor does 2 things different from our *Runner* Actor  
+
+. Creating *Runner* Actor: 
 
 
  
