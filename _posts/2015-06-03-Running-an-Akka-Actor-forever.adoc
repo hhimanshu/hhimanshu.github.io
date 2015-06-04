@@ -118,5 +118,9 @@ As we can see *Coach* is also an Actor which does specific tasks based on the me
 . Creating *Runner* Actor: When *Coach* Actor is initialized, it executes `context.actorOf`, which means it creates a new *Runner* and supervises it
 . Supervision: It defines `supervisorStrategy` for its children(Actors), in this case it supervises *Runner*. If *Runner* fails with `RuntimeExecption`, it `Restart` the Actor.
 
+Once we have this relationship defined, we should be able to run the code. We do this by running following  
+++++
+<script src="https://raw.githubusercontent.com/hhimanshu/learningScala/master/ahka/src/main/scala/com/learner/ahka/ruforever/RaceEvent.scala"></script>
+++++
 
  
