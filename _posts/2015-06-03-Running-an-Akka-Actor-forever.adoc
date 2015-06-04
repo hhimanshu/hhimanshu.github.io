@@ -115,7 +115,8 @@ class Coach() extends Actor with ActorLogging {
 ----
 As we can see *Coach* is also an Actor which does specific tasks based on the messages it receives. In this case, Actor does 2 things different from our *Runner* Actor  
 
-. Creating *Runner* Actor: 
+. Creating *Runner* Actor: When *Coach* Actor is initialized, it executes `context.actorOf`, which means it creates a new *Runner* and supervises it
+. Supervision: It defines `supervisorStrategy` for its children(Actors), in this case it supervises *Runner*. If *Runner* fails with `RuntimeExecption`, it `Restart` the Actor.
 
 
  
