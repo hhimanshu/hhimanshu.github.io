@@ -23,7 +23,7 @@
     <meta property="og:description" content="I work on a project that runs as a single process and does many things. I was also reading about Akka for a while and wanted to use it. This seemed to be a very good use case where I..." />
     <meta property="og:url" content="https://hhimanshu.github.io/2015/06/03/Running-an-Akka-Actor-forever.html" />
     <meta property="article:published_time" content="2015-06-03T07:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-06-04T05:00:03.880Z" />
+    <meta property="article:modified_time" content="2015-06-04T05:12:12.159Z" />
     <meta property="article:tag" content="scala" />
     <meta property="article:tag" content="akka" />
     <meta property="article:tag" content="fault tolreant" />
@@ -48,7 +48,7 @@
     "headline": "Running an Akka Actor forever",
     "url": "https://hhimanshu.github.io/2015/06/03/Running-an-Akka-Actor-forever.html",
     "datePublished": "2015-06-03T07:00:00.000Z",
-    "dateModified": "2015-06-04T05:00:03.880Z",
+    "dateModified": "2015-06-04T05:12:12.159Z",
     "keywords": "scala,  akka,  fault tolreant",
     "description": "I work on a project that runs as a single process and does many things. I was also reading about Akka for a while and wanted to use it. This seemed to be a very good use case where I..."
 }
@@ -135,6 +135,14 @@ class Marathon extends Race {
 <p>The <strong>Marathon</strong> <em>is a</em> <strong>Race</strong> whis is supposed to run longer, but in our case we are making it fail so that we can assert when our <strong>Runner</strong> fails, the <strong>Coach</strong> starts it up again.</p>
 </div>
 <div class="paragraph">
+<p>The way to imagine that would be</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/actor_run_forever_1.png" alt="fail hierarchy">
+</div>
+</div>
+<div class="paragraph">
 <p>Our <strong>Runner</strong> looks like</p>
 </div>
 <div class="listingblock">
@@ -208,7 +216,7 @@ class Coach() extends Actor with ActorLogging {
 </div>
 </div>
 <div class="paragraph">
-<p>As we can see <strong>Coach</strong> is also an Actor which does specific tasks based on the messages it receives. In this case, Actor does 2 things different from our <strong>Runner</strong> Actor</p>
+<p>As we can see <strong>Coach</strong> is also an Actor which does specific tasks based on the messages it receives. In this case, Actor does following things different from our <strong>Runner</strong> Actor</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -216,14 +224,114 @@ class Coach() extends Actor with ActorLogging {
 <p>Creating <strong>Runner</strong> Actor: When <strong>Coach</strong> Actor is initialized, it executes <code>context.actorOf</code>, which means it creates a new <strong>Runner</strong> and supervises it</p>
 </li>
 <li>
-<p>Supervision: It defines <code>supervisorStrategy</code> for its children(Actors), in this case it supervises <strong>Runner</strong>. If <strong>Runner</strong> fails with <code>RuntimeExecption</code>, it <code>Restart</code> the Actor.</p>
+<p>Supervision: It defines <code>supervisorStrategy</code> for its children(Actors), in this case it supervises <strong>Runner</strong>. If <strong>Runner</strong> fails with <code>RuntimeExecption</code>, it <code>Restart</code> the Actor. It applied <a href="http://doc.akka.io/docs/akka/snapshot/scala/fault-tolerance.html">OneForOneStrategy</a> which means only take action on the child that failed. As per this example, it tries to restart Actor 2 times with in 5 seconds and stops if Actor still fails.</p>
+</li>
+<li>
+<p>Started Actor on <a href="http://doc.akka.io/docs/akka/snapshot/scala/dispatchers.html#Types_of_dispatchers">PinnedDispatcher</a>: The reason we run <strong>Runner</strong> on a dedicated thread because in my current project I always wanted the legacy process to be available</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
 <p>Once we have this relationship defined, we should be able to run the code. We do this by running following</p>
 </div>
-<script src="https://raw.githubusercontent.com/hhimanshu/learningScala/master/ahka/src/main/scala/com/learner/ahka/ruforever/RaceEvent.scala"></script>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-scala" data-lang="scala">object RaceEvent extends App {
+  val baseConfig = ConfigFactory.load()
+  val system = ActorSystem.create("race", baseConfig)
+  val coach = system.actorOf(Coach.props(), "coach")
+  coach ! StartWork
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When I run this on my laptop, I see the following logs</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[DEBUG] [06/03/2015 22:06:15.784] [main] [EventStream(akka://race)] logger log1-Logging$DefaultLogger started
+[DEBUG] [06/03/2015 22:06:15.785] [main] [EventStream(akka://race)] Default Loggers started
+[DEBUG] [06/03/2015 22:06:15.789] [race-akka.actor.default-dispatcher-3] [akka://race/system] now supervising Actor[akka://race/system/deadLetterListener#1505590548]
+[DEBUG] [06/03/2015 22:06:15.791] [race-akka.actor.default-dispatcher-2] [akka://race/system/deadLetterListener] started (akka.event.DeadLetterListener@35aab39a)
+[DEBUG] [06/03/2015 22:06:15.791] [race-akka.actor.default-dispatcher-4] [akka://race/user] now supervising Actor[akka://race/user/coach#-659795440]
+[DEBUG] [06/03/2015 22:06:15.804] [race-akka.actor.default-dispatcher-2] [akka://race/user/coach] started (com.learner.ahka.ruforever.Coach@523d23f0)
+[DEBUG] [06/03/2015 22:06:15.804] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] started (com.learner.ahka.ruforever.Runner@4eab5491)
+[DEBUG] [06/03/2015 22:06:15.804] [race-akka.actor.default-dispatcher-2] [akka://race/user/coach] now supervising Actor[akka://race/user/coach/runner#-1170580233]
+[DEBUG] [06/03/2015 22:06:15.804] [race-akka.actor.default-dispatcher-2] [akka://race/user/coach] received handled message StartWork
+[DEBUG] [06/03/2015 22:06:15.805] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] received handled message Start
+[DEBUG] [06/03/2015 22:06:15.806] [race-akka.actor.default-dispatcher-4] [akka://race/user/coach] received unhandled message OK
+[DEBUG] [06/03/2015 22:06:15.807] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] running...
+[ERROR] [06/03/2015 22:06:15.825] [race-akka.actor.default-dispatcher-4] [akka://race/user/coach/runner] MarathonRunner is tired
+java.lang.RuntimeException: MarathonRunner is tired
+	at com.learner.ahka.ruforever.Runner$$anonfun$receive$1.applyOrElse(Runner.scala:18)
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:62)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:50)
+	at scala.PartialFunction$class.applyOrElse(PartialFunction.scala:123)
+	at akka.event.LoggingReceive.applyOrElse(LoggingReceive.scala:50)
+	at akka.actor.Actor$class.aroundReceive(Actor.scala:467)
+	at com.learner.ahka.ruforever.Runner.aroundReceive(Runner.scala:11)
+	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:516)
+	at akka.actor.ActorCell.invoke(ActorCell.scala:487)
+	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:238)
+	at akka.dispatch.Mailbox.run(Mailbox.scala:220)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+
+[DEBUG] [06/03/2015 22:06:15.825] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] restarting
+[DEBUG] [06/03/2015 22:06:15.828] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] restarted
+[DEBUG] [06/03/2015 22:06:15.828] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] received handled message Start
+[DEBUG] [06/03/2015 22:06:15.828] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] running...
+[DEBUG] [06/03/2015 22:06:15.828] [race-akka.actor.default-dispatcher-4] [akka://race/user/coach] received unhandled message OK
+[ERROR] [06/03/2015 22:06:15.840] [race-akka.actor.default-dispatcher-2] [akka://race/user/coach/runner] MarathonRunner is tired
+java.lang.RuntimeException: MarathonRunner is tired
+	at com.learner.ahka.ruforever.Runner$$anonfun$receive$1.applyOrElse(Runner.scala:18)
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:62)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:50)
+	at scala.PartialFunction$class.applyOrElse(PartialFunction.scala:123)
+	at akka.event.LoggingReceive.applyOrElse(LoggingReceive.scala:50)
+	at akka.actor.Actor$class.aroundReceive(Actor.scala:467)
+	at com.learner.ahka.ruforever.Runner.aroundReceive(Runner.scala:11)
+	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:516)
+	at akka.actor.ActorCell.invoke(ActorCell.scala:487)
+	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:238)
+	at akka.dispatch.Mailbox.run(Mailbox.scala:220)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+
+[DEBUG] [06/03/2015 22:06:15.840] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] restarting
+[DEBUG] [06/03/2015 22:06:15.840] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] restarted
+[DEBUG] [06/03/2015 22:06:15.840] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] received handled message Start
+[DEBUG] [06/03/2015 22:06:15.840] [race-akka.actor.default-dispatcher-2] [akka://race/user/coach] received unhandled message OK
+[DEBUG] [06/03/2015 22:06:15.840] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] running...
+[ERROR] [06/03/2015 22:06:15.851] [race-akka.actor.default-dispatcher-4] [akka://race/user/coach/runner] MarathonRunner is tired
+java.lang.RuntimeException: MarathonRunner is tired
+	at com.learner.ahka.ruforever.Runner$$anonfun$receive$1.applyOrElse(Runner.scala:18)
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:62)
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:50)
+	at scala.PartialFunction$class.applyOrElse(PartialFunction.scala:123)
+	at akka.event.LoggingReceive.applyOrElse(LoggingReceive.scala:50)
+	at akka.actor.Actor$class.aroundReceive(Actor.scala:467)
+	at com.learner.ahka.ruforever.Runner.aroundReceive(Runner.scala:11)
+	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:516)
+	at akka.actor.ActorCell.invoke(ActorCell.scala:487)
+	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:238)
+	at akka.dispatch.Mailbox.run(Mailbox.scala:220)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+
+[INFO] [06/03/2015 22:06:15.855] [race-akka.actor.default-dispatcher-4] [akka://race/user/coach/runner] Message [com.learner.ahka.ruforever.Start$] from Actor[akka://race/user/coach#-659795440] to Actor[akka://race/user/coach/runner#-1170580233] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[DEBUG] [06/03/2015 22:06:15.855] [race-my-pinned-dispatcher-5] [akka://race/user/coach/runner] stopped</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The codebase for this is located on <a href="https://github.com/hhimanshu/learningScala/tree/master/ahka/src">Github</a> and also include tests.</p>
+</div>
         </section>
 
         <footer class="post-footer">
