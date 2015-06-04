@@ -45,7 +45,7 @@ class Marathon extends Race {
 
 The *Marathon* _is a_ *Race* whis is supposed to run longer, but in our case we are making it fail so that we can assert when our *Runner* fails, the *Coach* starts it up again.
 
-The way to imagine that would be
+The way to imagine failure would be
 
 image::/images/actor_run_forever_1.png[fail hierarchy]
 
