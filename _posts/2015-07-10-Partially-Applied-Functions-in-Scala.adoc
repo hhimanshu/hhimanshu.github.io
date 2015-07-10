@@ -1,4 +1,4 @@
-= Partially Applied Functions
+= Partially Applied Functions in Scala
 :hp-tags: scala, functional programming, partially applied functions
 
 As new to functional programming and Scala, I found it challenging to understand what Partially Applied Functions are. I decided to take it slow and let the concept sink in before I make any progress since they are some of the building blocks for writing better, cleaner functional code. And since they are used everywhere in Scala, learning them would give a better velocity when writing code.
