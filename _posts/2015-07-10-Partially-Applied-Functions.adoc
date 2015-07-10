@@ -136,7 +136,9 @@ scala> def email(to:String, from:String) = ()
 email: (to: String, from: String)Unit
 ----
 
-We have not implemented how this would be done since this is just an example.  so instead of customer knowing the email if for customer support or enterting it (since the email for support would not change), we can have a partially applied function that looks like  
+We have not implemented how this would be done since this is just an example.  
+
+So instead of customer knowing the email for customer support or enterting it (assuming the email for support would not change), we can have a partially applied function that looks like  
 
 [source, scala]
 ----
