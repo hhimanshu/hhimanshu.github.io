@@ -7,9 +7,7 @@ As a new comer, I try to concentrate on following things (for any concept)
 
 . What does this concept mean?
 
-. What benefits does it provides?
-
-. When to use them?
+. What benefits does it provides? or when to use them?
 
 With this in mind, lets start with our topic.
 
@@ -46,6 +44,8 @@ There are two important things to observe here
 . The way we did not provide the third argument value. The syntax `_:Int` means I am not providing the third value which is of type `Int`
 . The function `partialSum2ArgumentsProvided` did not return any value but a function
 
+Here `partialSum2ArgumentsProvided` is a partially applied function since we did not provide all the values required by `sum`
+
 There are other http://stackoverflow.com/a/8001065/379235[uses] of `_` just in case you are curious but for the purposes of this example, all it means that I do not provide the value when I apply function.
 
 `<function1>` represents a Scala http://www.scala-lang.org/api/current/#scala.Function1[trait] which basically means "a function of 1 parameter."
@@ -62,7 +62,32 @@ scala> partialSum2ArgumentsProvided(3)
 res1: Int = 6
 ----
 
-Aha!, 
+Aha!, so when we called/applied `3` to our we got our value result `6` back. But how come it knows about `1` and `2`? 
 
+Remember when we created `partialSum2ArgumentsProvided` we applied arguments `1` and `2`? That is how.
 
+It may be confusing, but try some other examples so that you can understand it.
 
+Taking this concept even further, you may want to ignore some or all of the arguments. Lets see how  
+
+[source, scala]
+----
+scala> val partialSum1ArgumentsProvided = sum(1, _:Int, _:Int)
+partialSum1ArgumentsProvided: (Int, Int) => Int = <function2>
+
+scala> partialSum1ArgumentsProvided(2,3)
+res2: Int = 6
+----
+
+and  
+
+[source, scala]
+----
+scala> val partialSumNoArgumentsProvided = sum(_:Int, _:Int, _:Int)
+partialSumNoArgumentsProvided: (Int, Int, Int) => Int = <function3>
+
+scala> partialSumNoArgumentsProvided(1,2,3)
+res3: Int = 6
+----
+
+==== What ia
