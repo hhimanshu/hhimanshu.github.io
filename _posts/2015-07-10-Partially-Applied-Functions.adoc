@@ -51,7 +51,7 @@ There are other http://stackoverflow.com/a/8001065/379235[uses] of `_` just in c
 
 With this in mind, let's recap.
 
-`partialSum2ArgumentsProvided` is a function which returned a function because we did not provide third parameter value.
+`partialSum2ArgumentsProvided` is a partially applied function because we did not provide third parameter value.
 
 So how do I get the value out of that function? 
 
@@ -63,7 +63,7 @@ res1: Int = 6
 
 Aha!, so when we called/applied `3` to our partially applied function and we got our result `6` back. But how come it knows about `1` and `2`? 
 
-Remember when we created `partialSum2ArgumentsProvided` we applied arguments `1` and `2`? That is how.
+Remember when we created `partialSum2ArgumentsProvided` we applied arguments `1` and `2`?
 
 It may be confusing, but try some other examples so that you can understand it.
 
