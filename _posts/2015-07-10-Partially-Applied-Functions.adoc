@@ -1,0 +1,68 @@
+= Partially Applied Functions
+:hp-tags: scala, functional programming, partially applied functions
+
+As new to functional programming and Scala, I found it challenging to understand what Partially Applied Functions are. I decided to take it slow and let the concept sink in before I make any progress since they are some of the building blocks for writing better, cleaner functional code. And since they are used everywhere in Scala, learning them would give a better velocity when writing code.
+
+As a new comer, I try to concentrate on following things (for any concept)
+
+. What does this concept mean?
+
+. What benefits does it provides?
+
+. When to use them?
+
+With this in mind, lets start with our topic.
+
+== Partially Applied Functions
+==== What does the concept mean?
+When we invoke/call any function, it means that we “apply” function to the arguments (used often in mathematics). In programming world it simply means calling a function with arguments. Read this http://stackoverflow.com/a/9738862/379235[stackoverflow] answer for explanation. 
+
+Taking the same definition forward, "partially applied functions” means functions where some of the argument are applied. For example
+
+[source, scala]
+----
+scala> def sum(a:Int, b:Int, c:Int) = a + b + c
+sum: (a: Int, b: Int, c: Int)Int
+----
+
+Invoking or calling or applying arguments to this function means  
+
+[source, scala]
+----
+scala> sum(1,2,3)
+res0: Int = 6
+----
+
+So how partially applied functions would look like?  
+
+[source, scala]
+----
+scala> val partialSum2ArgumentsProvided = sum(1, 2, _:Int)
+partialSum2ArgumentsProvided: Int => Int = <function1>
+----
+
+There are two important things to observe here
+
+. The way we did not provide the third argument value. The syntax `_:Int` means I am not providing the third value which is of type `Int`
+. The function `partialSum2ArgumentsProvided` did not return any value but a function
+
+There are other http://stackoverflow.com/a/8001065/379235[uses] of `_` just in case you are curious but for the purposes of this example, all it means that I do not provide the value when I apply function.
+
+`<function1>` represents a Scala http://www.scala-lang.org/api/current/#scala.Function1[trait] which basically means "a function of 1 parameter."
+
+With this in mind, let's recap.
+
+`partialSum2ArgumentsProvided` is a function which returned a function because we did not provide third parameter value.
+
+So how do I get the value out of that function? 
+
+[source, scala]
+----
+scala> partialSum2ArgumentsProvided(3)
+res1: Int = 6
+----
+
+Aha!, 
+
+
+
