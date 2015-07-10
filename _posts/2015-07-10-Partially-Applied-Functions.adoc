@@ -11,8 +11,7 @@ As a new comer, I try to concentrate on following things (for any concept)
 
 With this in mind, lets start with our topic.
 
-== Partially Applied Functions
-==== What does the concept mean?
+==== What does the it mean?
 When we invoke/call any function, it means that we “apply” function to the arguments (used often in mathematics). In programming world it simply means calling a function with arguments. Read this http://stackoverflow.com/a/9738862/379235[stackoverflow] answer for explanation. 
 
 Taking the same definition forward, "partially applied functions” means functions where some of the argument are applied. For example
@@ -62,7 +61,7 @@ scala> partialSum2ArgumentsProvided(3)
 res1: Int = 6
 ----
 
-Aha!, so when we called/applied `3` to our we got our value result `6` back. But how come it knows about `1` and `2`? 
+Aha!, so when we called/applied `3` to our partially applied function and we got our result `6` back. But how come it knows about `1` and `2`? 
 
 Remember when we created `partialSum2ArgumentsProvided` we applied arguments `1` and `2`? That is how.
 
@@ -79,6 +78,8 @@ scala> partialSum1ArgumentsProvided(2,3)
 res2: Int = 6
 ----
 
+`<function2>` means "function with 2 parameters"
+
 and  
 
 [source, scala]
@@ -89,5 +90,58 @@ partialSumNoArgumentsProvided: (Int, Int, Int) => Int = <function3>
 scala> partialSumNoArgumentsProvided(1,2,3)
 res3: Int = 6
 ----
+`<function3>` means "function with 3 parameters"
 
-==== What ia
+==== When to use them?  
+While reading over from many places following list was common  
+
+===== Creating a function which is pre-loaded with some values 
+For example, consider multiply function which looks like  
+
+[source, scala]
+----
+scala> def multiply(a:Int, b:Int) = a * b
+multiply: (a: Int, b: Int)Int
+----
+
+Some partially applied functions that we could make are  
+
+[source, scala]
+----
+scala> def multiplyBy2 = multiply(_:Int, 2)
+multiplyBy2: Int => Int
+
+scala> multiplyBy2(2)
+res4: Int = 4
+
+scala> multiplyBy2(10)
+res5: Int = 20
+
+scala> def multiplyBy3 = multiply(_:Int, 3)
+multiplyBy3: Int => Int
+
+scala> multiplyBy3(10)
+res6: Int = 30
+
+scala> multiplyBy3(30)
+res7: Int = 90
+----
+
+===== Providing only unique variables to a function  
+Consider an application that send email to customer support `customersupport@enterprise.com`. We may have a function that looks like  
+
+[source, scala]
+----
+scala> def email(to:String, from:String) = ()
+email: (to: String, from: String)Unit
+----
+
+We have not implemented how this would be done since this is just an example.  so instead of customer knowing the email if for customer support or enterting it (since the email for support would not change), we can have a partially applied function that looks like  
+
+[source, scala]
+----
+scala> def emailCustomerSupport = email("customersupport@enterprise.com", _:String)
+emailCustomerSupport: String => Unit
+
+scala> emailCustomerSupport("sadcustomer@googlemail.com")
+----
