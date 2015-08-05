@@ -8,3 +8,7 @@ Here is my first solution set for Chapter 01
 ++++
 <script src="https://gist.github.com/hhimanshu/55564b70dac97d0aa4eb#file-chapter01-scala"></script>
 ++++
+
+++++
+<script src="https://gist.githubusercontent.com/hhimanshu/55564b70dac97d0aa4eb/raw/02796848e0c0b418330a54422d6d976882c6acc2/Chapter01.scala"></script>
+++++
