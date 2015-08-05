@@ -1,0 +1,10 @@
+= Scala for the Impatient, Chapter 01
+:hp-tags: scala, scala for the impatient
+
+I am learning Scala and will post all my exercises here. This may help others learn or will give me opportunity to learn from others.
+
+Here is my first solution set for Chapter 01
+
+++++
+<script src="https://gist.githubusercontent.com/hhimanshu/55564b70dac97d0aa4eb/raw/02796848e0c0b418330a54422d6d976882c6acc2/Chapter01.scala"></script>
+++++
